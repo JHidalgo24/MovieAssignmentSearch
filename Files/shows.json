@@ -1,0 +1,29 @@
+[
+  {
+    "season": 6,
+    "episode": 86,
+    "writers": [
+      "David Chase"
+    ],
+    "Id": 1,
+    "title": "The Sopranos"
+  },
+  {
+    "season": 1,
+    "episode": 8,
+    "writers": [
+      "Hwang Dong-hyuk"
+    ],
+    "Id": 2,
+    "title": "Squid Game"
+  },
+  {
+    "season": 5,
+    "episode": 62,
+    "writers": [
+      "Vince Gilligan"
+    ],
+    "Id": 3,
+    "title": "Breaking Bad"
+  }
+]

@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net5.0</TargetFramework>
+        <GenerateProgramFile>false</GenerateProgramFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CsvHelper" Version="27.1.1" />
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="NLog.Config" Version="4.7.11" />
+      <PackageReference Include="NLog.Web.AspNetCore" Version="4.14.0" />
+      <PackageReference Include="xunit" Version="2.4.2-pre.12" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Files\movies.csv" />
+      <EmbeddedResource Include="Files\movies.csv">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="Files\shows.csv" />
+      <EmbeddedResource Include="Files\shows.csv">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="Files\videos.csv" />
+      <EmbeddedResource Include="Files\videos.csv">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="NLog.config" />
+      <EmbeddedResource Include="NLog.config">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="log_file.log" />
+      <None Remove="Files\movies.json" />
+      <EmbeddedResource Include="Files\movies.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="Files\shows.json" />
+      <EmbeddedResource Include="Files\shows.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="Files\videos.json" />
+      <EmbeddedResource Include="Files\videos.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+
+</Project>
