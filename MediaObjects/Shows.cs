@@ -11,11 +11,11 @@ namespace MovieAssignmentInterfaces.MediaObjects
 
         [Name("writers")]
         [TypeConverter(typeof(ToStringArrayConverter))]
-        public List<string> writers { get; set; }
+        public List<string> Writers { get; set; }
 
         public override string Display()
         {
-            return $"Type:Show ShowId:{Id} Title:{title} Seasons:{season} Episodes:{episode} Writers:{string.Join('|', writers)} ";
+            return $"Type:Show ShowId:{Id} Title:{title} Seasons:{season} Episodes:{episode} Writers:{string.Join('|', Writers)} ";
         }
     }
 }

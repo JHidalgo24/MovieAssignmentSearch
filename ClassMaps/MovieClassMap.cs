@@ -10,7 +10,7 @@ namespace MovieAssignmentInterfaces.ClassMaps
         {
             Map(m => m.Id).Index(0).Name("movieId");
             Map(m => m.title).Index(1).Name("title");
-            Map(m => m.Genres).Index(2).Name("genres");
+            Map(m => m.Genres).Index(2).Name("genres").Convert(c => string.Join('|',c.Value.Genres));
         }
     }
 }

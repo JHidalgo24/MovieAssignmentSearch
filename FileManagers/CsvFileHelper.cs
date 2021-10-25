@@ -3,46 +3,41 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection.Emit;
 using CsvHelper;
 using CsvHelper.Configuration;
+using CsvHelper.TypeConversion;
 using MovieAssignmentInterfaces.ClassMaps;
+using MovieAssignmentInterfaces.Converters;
 using MovieAssignmentInterfaces.MediaObjects;
 
 namespace MovieAssignmentInterfaces.FileManagers
 {
     public class CsvFileHelper : IMediaHelper
     {
-
+        //if for some reason path changes I can directly change here rather than look for it everywhere
         private const string MoviePath = "Files//movies.csv";
         private const string ShowPath = "Files//shows.csv";
         private const string VideoPath = "Files//videos.csv";
-        public List<Shows> ShowsList { get; set; }
-        public List<Movie> MovieList { get; set; }
-        public List<Video> VideoList { get; set; }
-        public List<Movie> ReturnMovieList()
+        
+        //holds the media objects
+        public List<Shows> ShowsList = new List<Shows>();
+        public List<Movie> MovieList = new List<Movie>();
+        public List<Video> VideoList = new List<Video>();
+        
+        //constructor to read in lists
+        public CsvFileHelper() 
         {
-            return MovieList;
-
+            ReadFiles();
         }
-        public List<Shows> ReturnShowList()
-        {
-            return ShowsList;
-        }
-        public List<Video> ReturnVideoList()
-        {
-            return VideoList;
-        }
-        public CsvFileHelper()//reads the files into their list as soon as CsvFileHelper is made 
-        {
-            Shows();
-            Movies();
-            Videos();
-        }
-        public void Shows()
+        
+        //reads all the objects into lists but didn't want to add code directly in constructor
+        //to keep constructor clean
+        public void ReadFiles()
         {
             try
             {
-
+                //reads shows to list from csv
                 using (var streamReader =
                     new StreamReader(ShowPath))
                 using (var csv = new CsvReader(streamReader, CultureInfo.InvariantCulture))
@@ -51,19 +46,8 @@ namespace MovieAssignmentInterfaces.FileManagers
                     ShowsList = records;
 
                 }
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Couldn't read file");
-                throw;
-            }
-        }
-        public void Videos()
-        {
 
-            try
-            {
-
+                //reads videos to list from csv
                 using (var streamReader =
                     new StreamReader(VideoPath))
                 using (var csv = new CsvReader(streamReader, CultureInfo.InvariantCulture))
@@ -72,19 +56,8 @@ namespace MovieAssignmentInterfaces.FileManagers
                     VideoList = records;
 
                 }
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Couldn't read file");
-                throw;
-            }
-        }
-        public void Movies()
-        {
 
-            try
-            {
-
+                //reads movies to list from csv
                 using (var streamReader =
                     new StreamReader(MoviePath))
                 using (var csv = new CsvReader(streamReader, CultureInfo.InvariantCulture))
@@ -93,16 +66,18 @@ namespace MovieAssignmentInterfaces.FileManagers
                     MovieList = records;
                 }
             }
-            catch (Exception)
+            catch (Exception )
             {
-                Console.WriteLine("Couldn't read file");
-                throw;
+                Console.WriteLine("Could not read files");
+                Program.logger.Debug("Could not read files");
             }
         }
+        
+        //these add object to it's file and updates its list
         public void ShowAdd()
         {
             Menu menu = new Menu();
-            Media temp = new Shows();
+            Shows temp = new Shows();
             temp.Id = ShowsList[^1].Id+1;
             Console.WriteLine("What is the title of the Show?");
             string tempTitle = Console.ReadLine();
@@ -113,19 +88,20 @@ namespace MovieAssignmentInterfaces.FileManagers
             }
             temp.title = tempTitle;
             Console.WriteLine("How many seasons did the show have?");
-            (temp as Shows).season = menu.ValueGetter();
+            temp.season = menu.ValueGetter();
             Console.WriteLine("How many Episodes are there?");
-            (temp as Shows).episode = menu.ValueGetter();
+            temp.episode = menu.ValueGetter();
             Console.WriteLine("How many writers are there?");
             int writerCount = menu.ValueGetter();
-            List<string> writers = new List<string>();
+            var writersList = new List<string>();
             for (int i = 0; i < writerCount; i++)
             {
                 Console.WriteLine($"What is the name of writer #{i + 1}");
-                writers.Add(Console.ReadLine());
+                writersList.Add(Console.ReadLine());
             }
-            ShowsList.Add((temp as Shows));
-            var records = new List<Shows> { new Shows { episode = (temp as Shows).episode, Id = temp.Id, season = (temp as Shows).season, title = temp.title, writers = (temp as Shows).writers } };
+            temp.Writers = writersList;
+            ShowsList.Add(temp);
+            var records = new List<Shows> { new Shows { episode = temp.episode, Id = temp.Id, season = temp.season, title = temp.title, Writers = temp.Writers } };
             var config = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = false, };
             using (var stream = File.Open(ShowPath,
                 FileMode.Append))
@@ -164,7 +140,7 @@ namespace MovieAssignmentInterfaces.FileManagers
             Console.WriteLine("How long is the video in minutes?");
             (temp as Video).Length = menu.ValueGetter();
             Console.WriteLine("How many regions is the video in?");
-            Console.WriteLine("0-NA \n 1-SA \n3-Asia");
+            Console.WriteLine("0-NA \n1-SA \n2-Asia");
             int regionsTotal = menu.ValueGetter();
             List<int> regions = new List<int>();
             for (int i = 0; i < regionsTotal; i++)
@@ -230,10 +206,14 @@ namespace MovieAssignmentInterfaces.FileManagers
                 csv.WriteRecords(records);
             }
         }
+        
+        //searches media(from all of the lists)
         public void SearchMedia(string title)
         {
            List<Media> foundMedia = new List<Media>();
-            
+            /* where item in list title to lower case contains user input title to lower case then for each media
+            matched add to the foundMedia list. I could make it output then and there but would make it
+            messy with 3 Console.WriteLines on 3 separate lines*/
             MovieList.Where(c => c.title.ToLower().Contains(title.ToLower())).ToList().ForEach(c => foundMedia.Add(c));
             ShowsList.Where(c => c.title.ToLower().Contains(title.ToLower())).ToList().ForEach(c => foundMedia.Add(c));
             VideoList.Where(c => c.title.ToLower().Contains(title.ToLower())).ToList().ForEach(c => foundMedia.Add(c));
@@ -244,6 +224,8 @@ namespace MovieAssignmentInterfaces.FileManagers
                 Console.WriteLine(x.Display());
             } 
         }
+        
+        //duplicate checks from lists (finds exact match and not just a substring)
         public bool DuplicateChecker(string chosenMedia, string type)
         {
             var contained = false;

@@ -9,76 +9,38 @@ namespace MovieAssignmentInterfaces.FileManagers
 {
     public class JsonFileHelper : IMediaHelper
     {
+        //if for some reason path changes I can directly change here rather than look for it everywhere
         private const string MoviePath = "Files//movies.json";
         private const string ShowPath = "Files//shows.json";
         private const string VideoPath = "Files//videos.json";
-        private List<Shows> ShowsList = new List<Shows>();
-        private List<Movie> MovieList = new List<Movie>();
-        private List<Video> VideoList = new List<Video>();
+        
+        //holds the media objects
+        public List<Shows> ShowsList = new List<Shows>();
+        public List<Movie> MovieList = new List<Movie>();
+        public List<Video> VideoList = new List<Video>();
 
-        //returns movie list without giving them access to actual list
-        public List<Movie> ReturnMovieList()
-        {
-            return MovieList;
-
-        }
-        public List<Shows> ReturnShowList()
-        {
-            return ShowsList;
-        }
-        public List<Video> ReturnVideoList()
-        {
-            return VideoList;
-        }
-    
         //constructor to read in lists
         public JsonFileHelper()
         {
-            //reads the files into their list as soon as JSONFileHelper is made 
-            Shows();
-            Movies();
-            Videos();
+            ReadFiles();
         }
         
-        //these read the File mostly used in constructor)
-        public void Shows()
+        
+        public void ReadFiles()
         {
-            try
-            {
-                string json = File.ReadAllText(ShowPath);
-                ShowsList = JsonConvert.DeserializeObject<List<Shows>>(json);
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Could not read JSON file to List");
-            }
-        }
-        public void Movies()
-        {
-            try
-            {
-                string json = File.ReadAllText(MoviePath);
-                MovieList = JsonConvert.DeserializeObject<List<Movie>>(json);
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Could not read JSON file to List");
-            }
-        }
-        public void Videos()
-        {
-            try
-            {
-                string json = File.ReadAllText(VideoPath);
-                VideoList = JsonConvert.DeserializeObject<List<Video>>(json);
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Could not read JSON file to List");
-            }
+            string jsonShow = File.ReadAllText(ShowPath);
+            ShowsList = JsonConvert.DeserializeObject<List<Shows>>(jsonShow);
+
+            string jsonMovie = File.ReadAllText(MoviePath);
+            MovieList = JsonConvert.DeserializeObject<List<Movie>>(jsonMovie);
+
+            string jsonVideo = File.ReadAllText(VideoPath);
+            VideoList = JsonConvert.DeserializeObject<List<Video>>(jsonVideo);
+            
+            
         }
         
-        //these add object to it's file
+        //these add object to it's file and updates its list
         public void ShowAdd()
         {
             Menu menu = new Menu();
@@ -105,7 +67,7 @@ namespace MovieAssignmentInterfaces.FileManagers
                 writers.Add(Console.ReadLine());
             }
 
-            (temp as Shows).writers = writers;
+            (temp as Shows).Writers = writers;
             ShowsList.Add((temp as Shows));
             string json = JsonConvert.SerializeObject(ShowsList, Formatting.Indented);
             File.WriteAllText(ShowPath, json);
@@ -169,7 +131,7 @@ namespace MovieAssignmentInterfaces.FileManagers
             Console.WriteLine("How long is the video in minutes?");
             (temp as Video).Length = menu.ValueGetter();
             Console.WriteLine("How many regions is the video in?");
-            Console.WriteLine("0-NA \n 1-SA \n3-Asia");
+            Console.WriteLine("0-NA \n1-SA \n2-Asia");
             int regionsTotal = menu.ValueGetter();
             List<int> regions = new List<int>();
             for (int i = 0; i < regionsTotal; i++)
@@ -188,7 +150,7 @@ namespace MovieAssignmentInterfaces.FileManagers
             File.WriteAllText(VideoPath, json);
         }
         
-        //searches media
+        //searches media (from all of the lists)
         public void SearchMedia(string title)
         {
             List<Media> foundMedia = new List<Media>();
@@ -212,15 +174,15 @@ namespace MovieAssignmentInterfaces.FileManagers
             switch (type)
             {
                 case "Movie":
-                    contained = MovieList.Any(c => c.title == chosenMedia);
+                    contained = MovieList.Any(c => c.title.ToLower() == chosenMedia.ToLower());
 
                     break;
                 case "Show":
-                    contained = ShowsList.Any(c => c.title == chosenMedia);
+                    contained = ShowsList.Any(c => c.title.ToLower() == chosenMedia.ToLower());
 
                     break;
                 case "Video":
-                    contained = VideoList.Any(c => c.title == chosenMedia);
+                    contained = VideoList.Any(c => c.title.ToLower() == chosenMedia.ToLower());
                     break;
             }
 

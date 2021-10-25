@@ -13,8 +13,7 @@ namespace MovieAssignmentInterfaces.Converters
             { return new List<string>(); }
             string[] allElements = text.Split('|');
             return new List<string>(allElements);
-
-
+            
         }
 
         public override string ConvertToString(object value, IWriterRow row, MemberMapData memberMapData)

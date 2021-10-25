@@ -9,10 +9,9 @@ namespace MovieAssignmentInterfaces
 {
     internal class Program
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
+        public static Logger logger = LogManager.GetCurrentClassLogger();
 
-        private static IMediaHelper
-            FileHelper = new JsonFileHelper(); //Can change JSONFileHelper to CSVFileHelper and should still work  
+        private static JsonFileHelper FileHelper = new(); //Can change JSONFileHelper to CSVFileHelper and should still work  
 
         private static readonly Menu Menu = new(); //helps with menu options and getting ints
 
@@ -60,7 +59,7 @@ namespace MovieAssignmentInterfaces
                             case 1:
                             {
                                 var cont = ""; //variable to let user decide whether they want to exit or not
-                                var temp = FileHelper.ReturnMovieList();
+                                var temp = FileHelper.MovieList;
                                 while (cont.ToLower() != "exit")
                                 {
                                     for (var i = 0; i < 10; i++) Console.WriteLine(temp[i].Display());
@@ -73,12 +72,12 @@ namespace MovieAssignmentInterfaces
                             case 2:
                             {
                                 var cont = "";
-                                var temp = FileHelper.ReturnShowList();
+                                var temp = FileHelper.ShowsList;
                                 while (cont.ToLower() != "exit")
                                 {
-                                    for (var i = 0; i < 2; i++) Console.WriteLine(temp[i].Display());
-                                    temp = temp.Skip(2).ToList();
-                                    Console.WriteLine("Show +2 more? enter exit to leave");
+                                    for (var i = 0; i < 1; i++) Console.WriteLine(temp[i].Display());
+                                    temp = temp.Skip(1).ToList();
+                                    Console.WriteLine("Show +1 more? enter exit to leave");
                                     cont = Console.ReadLine();
                                     cont = temp.Count == 0
                                         ? "exit"
@@ -91,12 +90,12 @@ namespace MovieAssignmentInterfaces
                             case 3:
                             {
                                 var cont = "";
-                                var temp = FileHelper.ReturnVideoList();
+                                var temp = FileHelper.VideoList;
                                 while (cont.ToLower() != "exit")
                                 {
-                                    for (var i = 0; i < 2; i++) Console.WriteLine(temp[i].Display());
-                                    temp = temp.Skip(2).ToList();
-                                    Console.WriteLine("Show +2 more? enter exit to leave");
+                                    for (var i = 0; i < 1; i++) Console.WriteLine(temp[i].Display());
+                                    temp = temp.Skip(1).ToList();
+                                    Console.WriteLine("Show +1 more? enter exit to leave");
                                     cont = Console.ReadLine();
                                     cont = temp.Count == 0 ? "exit" : cont;
                                 }

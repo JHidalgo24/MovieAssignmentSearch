@@ -14,7 +14,7 @@ namespace MovieAssignmentInterfaces.Converters
     {
         public override object ConvertFromString(string text, IReaderRow row, MemberMapData memberMapData)
         {
-            string[] allElements = text.Split(',');//turns the string into an array
+            string[] allElements = text.Split('|');//turns the string into an array
             int[] elementsAsInteger = allElements.Select(s => int.Parse(s)).ToArray();//parses the values from string to int array
             return new List<int>(elementsAsInteger);
         }

@@ -1,4 +1,7 @@
+using System;
 using CsvHelper.Configuration;
+using CsvHelper.TypeConversion;
+using MovieAssignmentInterfaces.Converters;
 using MovieAssignmentInterfaces.MediaObjects;
 
 namespace MovieAssignmentInterfaces.ClassMaps
@@ -11,7 +14,7 @@ namespace MovieAssignmentInterfaces.ClassMaps
             Map(m => m.title).Index(1).Name("title");
             Map(m => m.season).Index(2).Name("season");
             Map(m => m.episode).Index(3).Name("episode");
-            Map(m => m.writers).Index(4).Name("writers");
+            Map(m => m.Writers).Index(4).Name("writers").Convert(c => string.Join('|',c.Value.Writers));
         }
     }
 }

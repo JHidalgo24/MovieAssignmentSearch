@@ -8,12 +8,7 @@ namespace MovieAssignmentInterfaces.FileManagers
 {
     public interface IMediaHelper
     {
-        public List<Movie> ReturnMovieList();
-        public List<Shows> ReturnShowList();
-        public List<Video> ReturnVideoList();
-        public abstract void Shows();//reads shows to list
-        public abstract void Movies(); //reads movies to list
-        public abstract void Videos();//reads videos to list
+        public abstract void ReadFiles();
         public abstract void ShowAdd();
         public abstract void MovieAdd();
         public abstract void VideoAdd();
